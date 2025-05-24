@@ -12,6 +12,7 @@ import model.ModelException;
 import model.User;
 import model.dao.DAOFactory;
 import model.dao.UserDAO;
+import model.utils.PasswordEncryptor;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -119,12 +120,16 @@ public class UsersController extends HttpServlet {
 		String userName = req.getParameter("name");
 		String userGender = req.getParameter("gender");
 		String userEMail = req.getParameter("mail");
+		String userPW = req.getParameter("password");
+		if (!userPW.equals(""))
+			userPW = PasswordEncryptor.hashPassword(userPW);
 		
 		User user = new User();
 		user.setName(userName);
 		user.setGender(userGender);
 		user.setEmail(userEMail);
 		
+		user.setPassword(userPW);
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 		
 		try {
